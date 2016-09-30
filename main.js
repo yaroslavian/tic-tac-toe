@@ -45,17 +45,19 @@ var addCell = function(x, y){
 	div.style.width = div.style.height = settings.cellSize+'px';
 	div.style.top = y*(settings.cellSize+settings.cellMargin)+'px';
 	div.style.left = x*(settings.cellSize+settings.cellMargin)+'px';
-	gameCells[x] = // [y]
-	=div; 
+//	gameCells[x] = // [y]	=div; 
 	display.appendChild(div);
+
+    return div;
 }
 
 
 //Building board
 var buildBoard = function(){
 	for(var i=0; i<settings.boardSize; i++) {
-		for(var j=0; j<settings.boardSize; j++) {
-			addCell(i,j);
+        gameCells[i]=[];
+        for(var j=0; j<settings.boardSize; j++) {
+			gameCells[i][j] = addCell(i,j);
 		}
 	}
 };
