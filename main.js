@@ -3,50 +3,54 @@ var turn = true;
 var gameCells = []; // { element : link_to_object, state : current_state }
 
 var settings = {
-	cellSize: 60, 
+	cellSize: 60,
 	cellMargin: 10,
 	boardSize: 8,
 	winLimit: 3
 };
 
-//var function count(current_position, direction, ) {
-	//cell.
-//}
-
-walk = function(current, direction, collected) {
+walk = function(current, direction, collected, rev) { //rev -> reverse direction (bool)
 	collected = collected || 1;
+
 	console.log(collected);
 	var next;
 	console.log(direction);
 	switch (direction) {
 		case 'horizontal':
-			next = gameCells[current.y][current.x+1]; 
+			next = gameCells[current.y][rev ? current.x-1 : current.x+1];
 		break;
 		case 'vertical':
-			next = gameCells[current.y+1][current.x];
+			next = gameCells[rev ? current.y-1 : current.y+1][current.x];
 		break;
 		case 'diagonal':
-			next = gameCells[current.y+1][current.x+1];
+			next = rev ? gameCells[current.y-1][current.x-1] : gameCells[current.y+1][current.x+1];
+		break
+		case 'reverse-diagonal':
+			next = rev ? gameCells[current.y-1][current.x+1] : gameCells[current.y+1][current.x-1];
 		break
 	}
-	
-	console.log(next, current.state+'--->'+next.state);
-	if(next) {
-		if(next.state === current.state) {
-			
+
+	console.log(next, next && current.state+'--->'+next.state);
+
+		if(next && current.state === next.state) {
 			if(collected+1 !== settings.winLimit) {
-				return walk(next, direction, collected+1);
+				return walk(next, direction, collected+1, rev);
 			}
 			else return true;
+		} else {
+			if(rev) {
+				return false;
+			} else {
+				return walk(current, direction, 1, true);
+			}
 		}
-	}
-	else return false;
+
 }
 
 
 var checkResult = function(cell) {
 
-	return walk(cell,'horizontal') || walk(cell, 'vertical') || walk(cell, 'diagonal');
+	return walk(cell,'horizontal') || walk(cell, 'vertical') || walk(cell, 'diagonal') || walk(cell, 'reverse-diagonal');
 
 }
 
@@ -55,19 +59,19 @@ var cellClick = function(){
 		this.classList.remove(this.___cellObj.state);
 		this.___cellObj.state = turn ? 'krestik' : 'nolik';
 		this.classList.add(this.___cellObj.state);
-		
+
 		if(checkResult(this.___cellObj)) {
-			document.write('<h2>GAME OVER! ' + (turn ? 'KRESTIK' : 'NOLIK')  + ' WINS</h2>');	
+			document.write('<h2>GAME OVER! ' + (turn ? 'KRESTIK' : 'NOLIK')  + ' WINS</h2>');
 		} else {
 			turn = !turn;
-		}	
+		}
 	}
 };
 
 var addCell = function(y, x){
 	var div = document.createElement('div'); // Here is the DOM element represents the game cell
 	var cell = { element: div, state: 'active', x:x, y:y}; //Here is the cell object contains link to DOM object, current state and position of cell on board
-	div.___cellObj = cell; // reverse link to cell object.  
+	div.___cellObj = cell; // reverse link to cell object.
 	div.classList.add(cell.state);
 	div.onclick = cellClick;
 	div.style.width = div.style.height = settings.cellSize+'px';
