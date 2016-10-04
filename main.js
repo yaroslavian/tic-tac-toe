@@ -6,29 +6,37 @@ var settings = {
 	cellSize: 60,
 	cellMargin: 10,
 	boardSize: 8,
-	winLimit: 3
+	winLimit: 5
 };
 
 walk = function(current, direction, collected, rev) { //rev -> reverse direction (bool)
 	collected = collected || 1;
 
-	console.log(collected);
-	var next;
+	console.log(collected, 'y= '+current.y,'x= '+current.x);
+	var next = {}; // 2 props: next.x, next.y
 	console.log(direction);
+
 	switch (direction) {
 		case 'horizontal':
-			next = gameCells[current.y][rev ? current.x-1 : current.x+1];
-		break;
+			next.x = rev ? current.x-1 : current.x+1;
+			next.y = current.y;
+			break;
 		case 'vertical':
-			next = gameCells[rev ? current.y-1 : current.y+1][current.x];
-		break;
+			next.x = current.x;
+			next.y = rev ? current.y-1 : current.y+1;
+			break;
 		case 'diagonal':
-			next = rev ? gameCells[current.y-1][current.x-1] : gameCells[current.y+1][current.x+1];
-		break
+			next.x = rev ? current.x-1 : current.x+1;
+			next.y = rev ? current.y-1 : current.y+1;
+			break;
 		case 'reverse-diagonal':
-			next = rev ? gameCells[current.y-1][current.x+1] : gameCells[current.y+1][current.x-1];
-		break
+			next.x = rev ? current.x+1 : current.x-1;
+			next.y = rev ? current.y-1 : current.y+1;
+			break;
 	}
+
+	if(gameCells[next.y] && gameCells[next.y][next.x]) next = gameCells[next.y][next.x]; //
+	else next = false;
 
 	console.log(next, next && current.state+'--->'+next.state);
 
@@ -44,7 +52,6 @@ walk = function(current, direction, collected, rev) { //rev -> reverse direction
 				return walk(current, direction, 1, true);
 			}
 		}
-
 }
 
 
