@@ -68,7 +68,7 @@ var cellClick = function(){
 		this.classList.add(this.___cellObj.state);
 
 		if(checkResult(this.___cellObj)) {
-			document.write('<h2>GAME OVER! ' + (turn ? 'KRESTIK' : 'NOLIK')  + ' WINS</h2>');
+			document.write('<h2>GAME OVER! ' + (turn ? '<span style="color:silver">KRESTIK</span>' : '<span style="color:orange">NOLIK</span>')  + ' WINS</h2>');
 		} else {
 			turn = !turn;
 		}
@@ -103,6 +103,10 @@ var buildBoard = function(){
 
 
 window.onload = function(){
+//feature
+//render game menu
+//start game
+
 	//set the display as a board render place
 	display = document.getElementById('display');
 
