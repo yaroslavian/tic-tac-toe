@@ -1,4 +1,2 @@
 # tic-tac-toe
-tic-Tac-toe
-
-Test assignment. In development.
+Simple browser **tic-Tac-toe** game written in javascript.
