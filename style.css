@@ -5,6 +5,8 @@ body {
 
 #display {
 	position: relative;
+	display: inline-block;
+	float: left;
 }
 
 

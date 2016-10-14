@@ -9,6 +9,27 @@ var settings = {
 	winLimit: 5
 };
 
+var system = (function(){
+	return {
+		applyStyles: function(elem, styles) {
+			for(style in styles) {
+				elem.style[style] = styles[style];
+			}
+			return elem;
+		},
+		addButton: function(parent, name, styles, callback){
+			var button = document.createElement('div');
+			button.innerHTML = '<span>'+ name +'</span>';
+			this.applyStyles(button, styles);
+			button.onclick = callback;
+			parent.appendChild(button);
+		}
+	}
+}());
+
+
+
+
 walk = function(current, direction, collected, rev) { //rev -> reverse direction (bool)
 	collected = collected || 1;
 
@@ -101,6 +122,33 @@ var buildBoard = function(){
 	}
 };
 
+//Building control pannel
+var buildPannel = function() {
+	var pannel = system.applyStyles(document.createElement('div'),{
+		'width'		: '300px',
+		'height'		: '300px',
+		'border'	: '2px solid #09f',
+		'color'		: 'blue',
+		'background-color' : '#999',
+		'display' : 'inline-block',
+		'position' : 'fixed',
+		'right' : '10px'
+	});
+
+	system.addButton(pannel, 'Close', {
+			'background-color' : 'magenta',
+			'display' : 'inline-block',
+			'padding' : '10px',
+			'border-radius' : '10px'
+		}, function() {
+			this.parentNode.style.display = 'none';
+	});
+
+	document.body.appendChild(pannel);
+};
+
+
+
 
 window.onload = function(){
 //feature
@@ -112,4 +160,11 @@ window.onload = function(){
 
 	//building board
 	buildBoard();
+
+	//control pannel
+	buildPannel();
+
+
+
+
 };
