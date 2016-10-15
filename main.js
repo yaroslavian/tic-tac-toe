@@ -17,16 +17,16 @@ var system = (function(){
 			}
 			return elem;
 		},
-		addButton: function(parent, name, styles, callback){
+		addButton: function(parent, name, callback){
 			var button = document.createElement('div');
 			button.innerHTML = '<span>'+ name +'</span>';
-			this.applyStyles(button, styles);
+			button.classList.add('button');	
 			button.onclick = callback;
 			parent.appendChild(button);
+			return button;
 		}
 	}
 }());
-
 
 
 
@@ -122,29 +122,17 @@ var buildBoard = function(){
 	}
 };
 
-//Building control pannel
-var buildPannel = function() {
-	var pannel = system.applyStyles(document.createElement('div'),{
-		'width'		: '300px',
-		'height'		: '300px',
-		'border'	: '2px solid #09f',
-		'color'		: 'blue',
-		'background-color' : '#999',
-		'display' : 'inline-block',
-		'position' : 'fixed',
-		'right' : '10px'
+//Building control panel
+var buildPanel = function() {
+
+	var panel = document.createElement('div');
+	panel.classList.add('panel');
+
+	var closeButton = system.addButton(panel, 'Close', function() {
+		this.parentNode.style.display = 'none';
 	});
 
-	system.addButton(pannel, 'Close', {
-			'background-color' : 'magenta',
-			'display' : 'inline-block',
-			'padding' : '10px',
-			'border-radius' : '10px'
-		}, function() {
-			this.parentNode.style.display = 'none';
-	});
-
-	document.body.appendChild(pannel);
+	document.body.appendChild(panel);
 };
 
 
@@ -161,10 +149,7 @@ window.onload = function(){
 	//building board
 	buildBoard();
 
-	//control pannel
-	buildPannel();
-
-
-
+	//Build control panel
+	buildPanel();
 
 };
