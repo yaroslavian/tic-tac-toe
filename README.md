@@ -1,2 +1,2 @@
 # tic-tac-toe
-Simple browser **tic-Tac-toe** game written in javascript.
+Simple browser **[tic-Tac-toe](https://en.wikipedia.org/wiki/Tic-tac-toe)** game written in **Javascript**.
