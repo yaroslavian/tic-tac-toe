@@ -9,6 +9,27 @@ var settings = {
 	winLimit: 5
 };
 
+var system = (function(){
+	return {
+		applyStyles: function(elem, styles) {
+			for(style in styles) {
+				elem.style[style] = styles[style];
+			}
+			return elem;
+		},
+		addButton: function(parent, name, callback){
+			var button = document.createElement('div');
+			button.innerHTML = '<span>'+ name +'</span>';
+			button.classList.add('button');
+			button.onclick = callback;
+			parent.appendChild(button);
+			return button;
+		}
+	}
+}());
+
+
+
 walk = function(current, direction, collected, rev) { //rev -> reverse direction (bool)
 	collected = collected || 1;
 
@@ -68,7 +89,7 @@ var cellClick = function(){
 		this.classList.add(this.___cellObj.state);
 
 		if(checkResult(this.___cellObj)) {
-			document.write('<h2>GAME OVER! ' + (turn ? 'KRESTIK' : 'NOLIK')  + ' WINS</h2>');
+			display.innerHTML ='<h2>GAME OVER! ' + (turn ? '<span style="color:silver">KRESTIK</span>' : '<span style="color:orange">NOLIK</span>')  + ' WINS</h2>';
 		} else {
 			turn = !turn;
 		}
@@ -101,11 +122,42 @@ var buildBoard = function(){
 	}
 };
 
+//Building control panel
+var buildPanel = function() {
+
+	var panel = document.createElement('div');
+	panel.classList.add('panel');
+
+	var startButton = system.addButton(panel, 'Restart!', function() {
+		//refresh board
+		//clear display
+		while(display.childNodes.length) {
+				display.removeChild(display.firstChild);
+		}
+		buildBoard();
+
+	});
+
+	var closeButton = system.addButton(panel, 'Close', function() {
+		this.parentNode.style.display = 'none';
+	});
+
+	document.body.appendChild(panel);
+};
+
 
 window.onload = function(){
+//feature
+//render game menu
+//start game
+
 	//set the display as a board render place
 	display = document.getElementById('display');
 
 	//building board
 	buildBoard();
+
+	//Build control panel
+	buildPanel();
+
 };
