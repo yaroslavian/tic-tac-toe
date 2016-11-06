@@ -20,7 +20,7 @@ var system = (function(){
 		addButton: function(parent, name, callback){
 			var button = document.createElement('div');
 			button.innerHTML = '<span>'+ name +'</span>';
-			button.classList.add('button');	
+			button.classList.add('button');
 			button.onclick = callback;
 			parent.appendChild(button);
 			return button;
@@ -127,6 +127,16 @@ var buildPanel = function() {
 
 	var panel = document.createElement('div');
 	panel.classList.add('panel');
+
+	var startButton = system.addButton(panel, 'Restart!', function() {
+		//refresh board
+		//clear display
+		while(display.childNodes.length) {
+				display.removeChild(display.firstChild);
+		}
+		buildBoard();
+
+	});
 
 	var closeButton = system.addButton(panel, 'Close', function() {
 		this.parentNode.style.display = 'none';
