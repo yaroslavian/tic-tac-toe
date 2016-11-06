@@ -89,7 +89,7 @@ var cellClick = function(){
 		this.classList.add(this.___cellObj.state);
 
 		if(checkResult(this.___cellObj)) {
-			document.write('<h2>GAME OVER! ' + (turn ? '<span style="color:silver">KRESTIK</span>' : '<span style="color:orange">NOLIK</span>')  + ' WINS</h2>');
+			display.innerHTML ='<h2>GAME OVER! ' + (turn ? '<span style="color:silver">KRESTIK</span>' : '<span style="color:orange">NOLIK</span>')  + ' WINS</h2>';
 		} else {
 			turn = !turn;
 		}
@@ -144,8 +144,6 @@ var buildPanel = function() {
 
 	document.body.appendChild(panel);
 };
-
-
 
 
 window.onload = function(){
