@@ -17,13 +17,19 @@ var system = (function(){
 			}
 			return elem;
 		},
-		addButton: function(parent, name, callback){
+		addButton: function(parent, name, callback) {
 			var button = document.createElement('div');
 			button.innerHTML = '<span>'+ name +'</span>';
 			button.classList.add('button');
 			button.onclick = callback;
 			parent.appendChild(button);
 			return button;
+		},
+		toggleTurn: function(state) {
+			turn = state || !turn;
+			var indicator = document.getElementById('turn-indicator');
+			indicator.style.backgroundColor = turn ? 'silver' : 'orange';
+			indicator.innerHTML = (turn ? 'X' : 'O')+' - turn';
 		}
 	}
 }());
@@ -91,7 +97,8 @@ var cellClick = function(){
 		if(checkResult(this.___cellObj)) {
 			display.innerHTML ='<h2>GAME OVER! ' + (turn ? '<span style="color:silver">KRESTIK</span>' : '<span style="color:orange">NOLIK</span>')  + ' WINS</h2>';
 		} else {
-			turn = !turn;
+			//switch turn
+			system.toggleTurn();
 		}
 	}
 };
@@ -135,12 +142,19 @@ var buildPanel = function() {
 				display.removeChild(display.firstChild);
 		}
 		buildBoard();
+		system.toggleTurn(true);
 
 	});
 
 	var closeButton = system.addButton(panel, 'Close', function() {
 		this.parentNode.style.display = 'none';
 	});
+
+
+	var turnIndicator = document.createElement('div');
+	turnIndicator.id='turn-indicator';
+	turnIndicator.innerHTML='X';
+	panel.appendChild(turnIndicator);
 
 	document.body.appendChild(panel);
 };

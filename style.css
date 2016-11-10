@@ -57,3 +57,11 @@ body {
 	border-radius : 10px;
 	cursor : pointer;
 }
+
+.panel > #turn-indicator {
+	border: 2px double white;
+	background-color: silver;
+	margin: 10px;
+	text-align: center;
+	font-size: 30px;
+}
