@@ -12,7 +12,7 @@ var
 
 	system = {
 		applyStyles: function(elem, styles) {
-			for(style in styles) {
+			for(var style in styles) {
 				elem.style[style] = styles[style];
 			}
 			return elem;
@@ -31,15 +31,16 @@ var
 			indicator.style.backgroundColor = turn ? 'silver' : 'orange';
 			indicator.innerHTML = (turn ? 'X' : 'O')+' - turn';
 		}
-	}
+	},
 	
 
 	walk = function(current, direction, collected, rev) { //rev -> reverse direction (bool)
+		var next = {}; // 2 props: next.x, next.y
+
 		collected = collected || 1;
 
-		console.log(collected, 'y= '+current.y,'x= '+current.x);
-		var next = {}; // 2 props: next.x, next.y
-		console.log(direction);
+		// console.log(collected, 'y= '+current.y,'x= '+current.x);
+		// console.log(direction);
 
 		switch (direction) {
 			case 'horizontal':
@@ -63,7 +64,7 @@ var
 		if(gameCells[next.y] && gameCells[next.y][next.x]) next = gameCells[next.y][next.x]; //
 		else next = false;
 
-		console.log(next, next && current.state+'--->'+next.state);
+		// console.log(next, next && current.state+'--->'+next.state);
 
 		if(next && current.state === next.state) {
 			if(collected+1 !== settings.winLimit) {
@@ -85,7 +86,7 @@ var
 	},
 
 	cellClick = function() {
-			if(this.___cellObj.state==='active') {
+			if(this.___cellObj.state === 'active') {
 				this.classList.remove(this.___cellObj.state);
 				this.___cellObj.state = turn ? 'krestik' : 'nolik';
 				this.classList.add(this.___cellObj.state);
