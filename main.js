@@ -1,16 +1,16 @@
-var display;
-var turn = true;
-var gameCells = []; // { element : link_to_object, state : current_state }
+var 
+	display,
+	turn = true,
+	gameCells = [], // { element : link_to_object, state : current_state }
 
-var settings = {
-	cellSize: 60,
-	cellMargin: 10,
-	boardSize: 8,
-	winLimit: 5
-};
+	settings = {
+		cellSize: 60,
+		cellMargin: 10,
+		boardSize: 8,
+		winLimit: 5
+	},
 
-var system = (function(){
-	return {
+	system = {
 		applyStyles: function(elem, styles) {
 			for(style in styles) {
 				elem.style[style] = styles[style];
@@ -32,40 +32,38 @@ var system = (function(){
 			indicator.innerHTML = (turn ? 'X' : 'O')+' - turn';
 		}
 	}
-}());
+	
 
+	walk = function(current, direction, collected, rev) { //rev -> reverse direction (bool)
+		collected = collected || 1;
 
+		console.log(collected, 'y= '+current.y,'x= '+current.x);
+		var next = {}; // 2 props: next.x, next.y
+		console.log(direction);
 
-walk = function(current, direction, collected, rev) { //rev -> reverse direction (bool)
-	collected = collected || 1;
+		switch (direction) {
+			case 'horizontal':
+				next.x = rev ? current.x-1 : current.x+1;
+				next.y = current.y;
+				break;
+			case 'vertical':
+				next.x = current.x;
+				next.y = rev ? current.y-1 : current.y+1;
+				break;
+			case 'diagonal':
+				next.x = rev ? current.x-1 : current.x+1;
+				next.y = rev ? current.y-1 : current.y+1;
+				break;
+			case 'reverse-diagonal':
+				next.x = rev ? current.x+1 : current.x-1;
+				next.y = rev ? current.y-1 : current.y+1;
+				break;
+		}
 
-	console.log(collected, 'y= '+current.y,'x= '+current.x);
-	var next = {}; // 2 props: next.x, next.y
-	console.log(direction);
+		if(gameCells[next.y] && gameCells[next.y][next.x]) next = gameCells[next.y][next.x]; //
+		else next = false;
 
-	switch (direction) {
-		case 'horizontal':
-			next.x = rev ? current.x-1 : current.x+1;
-			next.y = current.y;
-			break;
-		case 'vertical':
-			next.x = current.x;
-			next.y = rev ? current.y-1 : current.y+1;
-			break;
-		case 'diagonal':
-			next.x = rev ? current.x-1 : current.x+1;
-			next.y = rev ? current.y-1 : current.y+1;
-			break;
-		case 'reverse-diagonal':
-			next.x = rev ? current.x+1 : current.x-1;
-			next.y = rev ? current.y-1 : current.y+1;
-			break;
-	}
-
-	if(gameCells[next.y] && gameCells[next.y][next.x]) next = gameCells[next.y][next.x]; //
-	else next = false;
-
-	console.log(next, next && current.state+'--->'+next.state);
+		console.log(next, next && current.state+'--->'+next.state);
 
 		if(next && current.state === next.state) {
 			if(collected+1 !== settings.winLimit) {
@@ -79,86 +77,86 @@ walk = function(current, direction, collected, rev) { //rev -> reverse direction
 				return walk(current, direction, 1, true);
 			}
 		}
-}
+	},
 
 
-var checkResult = function(cell) {
+	checkResult = function(cell) {
+		return walk(cell, 'horizontal') || walk(cell, 'vertical') || walk(cell, 'diagonal') || walk(cell, 'reverse-diagonal');
+	},
 
-	return walk(cell,'horizontal') || walk(cell, 'vertical') || walk(cell, 'diagonal') || walk(cell, 'reverse-diagonal');
+	cellClick = function() {
+			if(this.___cellObj.state==='active') {
+				this.classList.remove(this.___cellObj.state);
+				this.___cellObj.state = turn ? 'krestik' : 'nolik';
+				this.classList.add(this.___cellObj.state);
 
-}
-
-var cellClick = function(){
-	if(this.___cellObj.state==='active') {
-		this.classList.remove(this.___cellObj.state);
-		this.___cellObj.state = turn ? 'krestik' : 'nolik';
-		this.classList.add(this.___cellObj.state);
-
-		if(checkResult(this.___cellObj)) {
-			display.innerHTML ='<h2>GAME OVER! ' + (turn ? '<span style="color:silver">KRESTIK</span>' : '<span style="color:orange">NOLIK</span>')  + ' WINS</h2>';
-		} else {
-			//switch turn
-			system.toggleTurn();
+			if(checkResult(this.___cellObj)) {
+				display.innerHTML ='<h2>GAME OVER! ' + (turn ? '<span style="color:silver">KRESTIK</span>' : '<span style="color:orange">NOLIK</span>')  + ' WINS</h2>';
+			} else {
+				//switch turn
+				system.toggleTurn();
+			}
 		}
-	}
-};
+	},
 
-var addCell = function(y, x){
-	var div = document.createElement('div'); // Here is the DOM element represents the game cell
-	var cell = { element: div, state: 'active', x:x, y:y}; //Here is the cell object contains link to DOM object, current state and position of cell on board
-	div.___cellObj = cell; // reverse link to cell object.
-	div.classList.add(cell.state);
-	div.onclick = cellClick;
-	div.style.width = div.style.height = settings.cellSize+'px';
-	div.style.top = y*(settings.cellSize+settings.cellMargin)+'px';
-	div.style.left = x*(settings.cellSize+settings.cellMargin)+'px';
-	display.appendChild(div);
+	addCell = function(y, x) {
+		var 
+			div = document.createElement('div'), // Here is the DOM element represents the game cell
+			cell = { 
+				element: div, 
+				state: 'active', 
+				x:x, 
+				y:y
+			}; //Here is the cell object contains link to DOM object, current state and position of cell on board
 
-    return cell;
+		div.___cellObj = cell; // reverse link to cell object.
+		div.classList.add(cell.state);
+		div.onclick = cellClick;
+		div.style.width = div.style.height = settings.cellSize+'px';
+		div.style.top = y*(settings.cellSize+settings.cellMargin)+'px';
+		div.style.left = x*(settings.cellSize+settings.cellMargin)+'px';
+		display.appendChild(div);
 
-}
+		return cell;
+	},
 
 
-//Building board
-var buildBoard = function(){
-	for(var i=0; i<settings.boardSize; i++) {
-        gameCells[i]=[];
-        for(var j=0; j<settings.boardSize; j++) {
-			gameCells[i][j] = addCell(i,j);
+	//Building board
+	buildBoard = function() {
+		for(var i=0; i<settings.boardSize; i++) {
+			gameCells[i]=[];
+			for(var j=0; j<settings.boardSize; j++) {
+				gameCells[i][j] = addCell(i,j);
+			}
 		}
-	}
-};
+	},
 
-//Building control panel
-var buildPanel = function() {
+	//Building control panel
+	buildPanel = function() {
 
-	var panel = document.createElement('div');
-	panel.classList.add('panel');
+		var 
+			panel = document.createElement('div'),
+			startButton = system.addButton(panel, 'Restart!', function() {
+				//refresh board
+				//clear display
+				while(display.childNodes.length) {
+					display.removeChild(display.firstChild);
+				}
+				buildBoard();
+				system.toggleTurn(true);
+			}),
+			closeButton = system.addButton(panel, 'Close', function() {
+				this.parentNode.style.display = 'none';
+			}),
+			turnIndicator = document.createElement('div');
+	
+		panel.classList.add('panel');
+		turnIndicator.id='turn-indicator';
+		turnIndicator.innerHTML='X';
+		panel.appendChild(turnIndicator);
 
-	var startButton = system.addButton(panel, 'Restart!', function() {
-		//refresh board
-		//clear display
-		while(display.childNodes.length) {
-				display.removeChild(display.firstChild);
-		}
-		buildBoard();
-		system.toggleTurn(true);
-
-	});
-
-	var closeButton = system.addButton(panel, 'Close', function() {
-		this.parentNode.style.display = 'none';
-	});
-
-
-	var turnIndicator = document.createElement('div');
-	turnIndicator.id='turn-indicator';
-	turnIndicator.innerHTML='X';
-	panel.appendChild(turnIndicator);
-
-	document.body.appendChild(panel);
-};
-
+		document.body.appendChild(panel);
+	};
 
 window.onload = function(){
 //feature
