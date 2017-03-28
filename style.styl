@@ -1,0 +1,50 @@
+body {
+	background-color: #000
+	color: #09F
+}
+
+#display
+	position: relative
+	display: inline-block
+
+	div 
+		position: absolute
+		border:2px solid green
+
+.active
+	cursor: pointer
+
+	&:hover 
+		border: 2px solid blue /* ?????? NOT WORKING ??????  */
+		background-color: #333
+
+.krestik
+	background-color: silver
+
+.nolik
+	background-color: orange
+
+/*Panel styles*/
+.panel
+	border : 2px solid #09f
+	color : blue
+	background-color : #999
+	display : inline-block
+	position : fixed
+	right : 10px
+
+
+	& > .button
+		background-color: magenta
+		display: inline-block
+		margin: 10px
+		padding: 10px
+		border-radius: 10px
+		cursor: pointer
+
+	& > #turn-indicator
+		border: 2px double white
+		background-color: silver
+		margin: 10px
+		text-align: center
+		font-size: 30px
